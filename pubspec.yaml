@@ -16,6 +16,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_bloc: ^9.1.1
   dio: ^5.9.0
+  equatable: ^2.0.7
+  dartz: ^0.10.1
   sembast: ^3.8.5+1
   path: ^1.9.1
   isar_flutter_libs: ^4.0.0-dev.13

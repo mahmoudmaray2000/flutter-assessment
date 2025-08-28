@@ -11,7 +11,8 @@ class NetworkHandler {
   NetworkHandler(this.dio) {
     dio.options.headers = {
       'Accept': 'application/json',
-      
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OGNiYWI5ZTlkNzFkYjU0OWRjNzhlY2NhYjI1YmI2NiIsIm5iZiI6MTc1NjM2NzcwNi44NTIsInN1YiI6IjY4YjAwYjVhNGZjNmE2OWVkYWE4YTkxNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VoirOblmRyjHc-eUqObWMOenZMTvfe4fkPo9uussJmo"
+
     };
   }
 
