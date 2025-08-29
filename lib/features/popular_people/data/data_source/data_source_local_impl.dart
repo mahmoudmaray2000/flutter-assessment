@@ -1,9 +1,10 @@
-import 'package:flutter_assessment/core/storage/sembast_service.dart';
+import 'package:flutter_assessment/core/storage/sembast_service/sembast_service.dart';
 
 class DataSourceLocalImpl {
   final SembastService _dbService;
 
-  DataSourceLocalImpl({required SembastService dbService}) : _dbService = dbService;
+  DataSourceLocalImpl({required SembastService dbService})
+    : _dbService = dbService;
 
   Future<List<Map<String, dynamic>>> getPopularPeople() async {
     return await _dbService.getAllPeople();
@@ -13,6 +14,6 @@ class DataSourceLocalImpl {
     required int page,
     required List<Map<String, dynamic>> peopleJson,
   }) async {
-    await _dbService.savePeoplePage(page, peopleJson);
+    await _dbService.savePeoplePage(page: page, peopleJson: peopleJson);
   }
 }
