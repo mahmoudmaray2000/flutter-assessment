@@ -17,7 +17,6 @@ class PopularPeopleData {
   String? name;
   String? originalName;
   String? firstAirDate;
-  List<String>? originCountry;
 
   PopularPeopleData({
     this.adult,
@@ -38,7 +37,6 @@ class PopularPeopleData {
     this.name,
     this.originalName,
     this.firstAirDate,
-    this.originCountry,
   });
 
   PopularPeopleData.fromJson(Map<String, dynamic> json) {
@@ -60,7 +58,6 @@ class PopularPeopleData {
     name = json['name'];
     originalName = json['original_name'];
     firstAirDate = json['first_air_date'];
-    originCountry = json['origin_country'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -83,7 +80,6 @@ class PopularPeopleData {
     data['name'] = this.name;
     data['original_name'] = this.originalName;
     data['first_air_date'] = this.firstAirDate;
-    data['origin_country'] = this.originCountry;
     return data;
   }
 }
