@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_assessment/features/popular_people/domain/entity/popular_details_entity.dart';
 
-sealed class PopularPeopleDetailsState extends Equatable {
+abstract class PopularPeopleDetailsState extends Equatable {
   @override
   List<Object?> get props => [];
 }

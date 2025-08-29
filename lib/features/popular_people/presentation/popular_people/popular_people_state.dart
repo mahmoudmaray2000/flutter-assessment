@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_assessment/features/popular_people/domain/entity/popular_people_entity.dart';
 
-sealed class PopularPeopleState extends Equatable {
+abstract class PopularPeopleState extends Equatable {
   final int? page;
   const PopularPeopleState({required this.page});
   @override

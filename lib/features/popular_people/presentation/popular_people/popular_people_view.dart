@@ -21,7 +21,6 @@ class PopularPeoplePage extends StatelessWidget {
         appBar: AppBar(title: const Text('Popular People')),
         body: BlocBuilder<PopularPeopleBloc, PopularPeopleState>(
           builder: (context, state) {
-            print("statattatat $state");
             if (state is PopularPeopleLoadingState && state.page == 1) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is PopularPeopleLoadedState) {

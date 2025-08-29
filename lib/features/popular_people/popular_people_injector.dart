@@ -30,6 +30,8 @@ class PopularModuleFilter {
   }
 }
 
+
+
 class PopularPeopleModule {
   static late final PopularDataSourceImpl _dataSource;
   static late final PopularRepositoryImpl _repository;
@@ -38,6 +40,9 @@ class PopularPeopleModule {
   static late final ImageSaverServiceImpl _imageSaverService;
   static late final DataSourceLocalImpl _dataSourceLocalImpl;
   static late final LocalPopularUseCase _localPopularUseCase;
+
+
+
 
   static bool _initialized = false;
 

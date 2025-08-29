@@ -1,30 +1,74 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_assessment/features/popular_people/popular_people_injector.dart';
+import 'package:flutter_assessment/injection.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_assessment/features/popular_people/presentation/popular_people/popular_people_view.dart';
+import 'package:flutter_assessment/features/popular_people/domain/entity/popular_people_entity.dart';
+import 'package:flutter_assessment/features/popular_people/presentation/popular_people/component/popular_people_list_item.dart';
 
-import 'package:flutter_assessment/main.dart';
+void main() async{
+  TestWidgetsFlutterBinding.ensureInitialized();
+  await Injector.init();
+  PopularPeopleModule.init();
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  group('PopularPeoplePage (UI-only smoke)', () {
+    testWidgets('renders AppBar title', (tester) async {
+      await tester.pumpWidget(MaterialApp(home: const PopularPeoplePage()));
+      await tester.pump();
+      expect(find.text('Popular People'), findsOneWidget);
+    });
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  group('PopularPeopleListItem (component UI)', () {
+    testWidgets('renders a person name', (tester) async {
+      final p = PopularPeopleEntity(
+        id: 1,
+        name: 'Person 1',
+        profilePath: '',
+        knownFor: const [],
+      );
+
+      await tester.pumpWidget(
+        wrap(
+          Column(
+            children: [
+              PopularPeopleListItem(
+                key: const ValueKey(1),
+                person: p,
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Person 1'), findsOneWidget);
+    });
+
+    testWidgets('renders multiple items', (tester) async {
+      final people = [
+        PopularPeopleEntity(id: 1, name: 'Person 1', profilePath: '', knownFor: const []),
+        PopularPeopleEntity(id: 2, name: 'Person 2', profilePath: '', knownFor: const []),
+      ];
+
+      await tester.pumpWidget(
+        wrap(
+          Column(
+            children: [
+              for (final p in people)
+                PopularPeopleListItem(
+                  key: ValueKey(p.id),
+                  person: p,
+                ),
+            ],
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Person 1'), findsOneWidget);
+      expect(find.text('Person 2'), findsOneWidget);
+    });
   });
 }
