@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_assessment/core/networking/network_exception.dart';
-import 'package:flutter_assessment/features/popular_people/data/data_source/data_source_impl.dart';
-import 'package:flutter_assessment/features/popular_people/data/data_source/data_source_local_impl.dart';
+import 'package:flutter_assessment/features/popular_people/data/data_source/remote/data_source_impl.dart';
+import 'package:flutter_assessment/features/popular_people/data/data_source/local/data_source_local_impl.dart';
 import 'package:flutter_assessment/features/popular_people/data/mapper/popular_details_mapper.dart';
 import 'package:flutter_assessment/features/popular_people/data/mapper/popular_local_mapper.dart';
 import 'package:flutter_assessment/features/popular_people/data/mapper/popular_response_mapper.dart';

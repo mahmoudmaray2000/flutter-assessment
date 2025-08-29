@@ -1,6 +1,6 @@
 import 'package:flutter_assessment/core/storage/image_service/image_service_impl.dart';
-import 'package:flutter_assessment/features/popular_people/data/data_source/data_source_impl.dart';
-import 'package:flutter_assessment/features/popular_people/data/data_source/data_source_local_impl.dart';
+import 'package:flutter_assessment/features/popular_people/data/data_source/remote/data_source_impl.dart';
+import 'package:flutter_assessment/features/popular_people/data/data_source/local/data_source_local_impl.dart';
 import 'package:flutter_assessment/features/popular_people/data/repository/popular_repository_impl.dart';
 import 'package:flutter_assessment/features/popular_people/domain/use_case/fetch_popular_details_use_cae.dart';
 import 'package:flutter_assessment/features/popular_people/domain/use_case/fetch_popular_use_case.dart';
