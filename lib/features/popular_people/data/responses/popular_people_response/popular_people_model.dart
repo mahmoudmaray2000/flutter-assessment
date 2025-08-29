@@ -1,5 +1,6 @@
 
 import 'package:flutter_assessment/features/popular_people/data/responses/popular_people_response/popular_people_data.dart';
+import 'package:flutter_assessment/features/popular_people/domain/entity/popular_people_entity.dart';
 
 class PopularPeopleModel {
   bool? adult;
@@ -56,4 +57,20 @@ class PopularPeopleModel {
     }
     return data;
   }
+
+  factory PopularPeopleModel.fromEntity(PopularPeopleEntity entity) {
+    return PopularPeopleModel(
+      id: entity.id!,
+      name: entity.name ?? '',
+      knownFor: entity.knownFor ?? [],
+      profilePath: entity.profilePath,
+      knownForDepartment: entity.knownForDepartment,
+      originalName: entity.originalName,
+      gender: entity.gender,
+      adult: entity.adult,
+      popularity: entity.popularity,
+
+    );
+  }
+
 }

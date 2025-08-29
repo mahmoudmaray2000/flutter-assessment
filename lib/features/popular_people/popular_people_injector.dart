@@ -1,8 +1,10 @@
 import 'package:flutter_assessment/core/storage/image_service/image_service_impl.dart';
 import 'package:flutter_assessment/features/popular_people/data/data_source/data_source_impl.dart';
+import 'package:flutter_assessment/features/popular_people/data/data_source/data_source_local_impl.dart';
 import 'package:flutter_assessment/features/popular_people/data/repository/popular_repository_impl.dart';
 import 'package:flutter_assessment/features/popular_people/domain/use_case/fetch_popular_details_use_cae.dart';
 import 'package:flutter_assessment/features/popular_people/domain/use_case/fetch_popular_use_case.dart';
+import 'package:flutter_assessment/features/popular_people/domain/use_case/local_popular_use_case.dart';
 import 'package:flutter_assessment/features/popular_people/presentation/popular_people/popular_people_bloc.dart';
 import 'package:flutter_assessment/features/popular_people/presentation/popular_people_details/popular_people_details_bloc.dart';
 import 'package:flutter_assessment/injection.dart';
@@ -14,6 +16,8 @@ class PopularModuleFilter {
     FetchPopularUseCase,
     FetchPopularDetailsUseCase,
     ImageSaverServiceImpl,
+    DataSourceLocalImpl,
+    LocalPopularUseCase,
   };
 
   static bool canInject<T>() => _allowedTypes.contains(T);
@@ -32,6 +36,8 @@ class PopularPeopleModule {
   static late final FetchPopularUseCase _fetchPopularUseCase;
   static late final FetchPopularDetailsUseCase _fetchPopularDetailsUseCase;
   static late final ImageSaverServiceImpl _imageSaverService;
+  static late final DataSourceLocalImpl _dataSourceLocalImpl;
+  static late final LocalPopularUseCase _localPopularUseCase;
 
   static bool _initialized = false;
 
@@ -42,8 +48,15 @@ class PopularPeopleModule {
       return PopularDataSourceImpl(networkHandler: Injector.networkHandler);
     });
 
+    _dataSourceLocalImpl = PopularModuleFilter.inject(() {
+      return DataSourceLocalImpl(dbService: Injector.dbService);
+    });
+
     _repository = PopularModuleFilter.inject(() {
-      return PopularRepositoryImpl(popularDataSourceImpl: _dataSource);
+      return PopularRepositoryImpl(
+        popularDataSourceImpl: _dataSource,
+        dataSourceLocalImpl: _dataSourceLocalImpl,
+      );
     });
 
     _fetchPopularUseCase = PopularModuleFilter.inject(() {
@@ -56,6 +69,9 @@ class PopularPeopleModule {
 
     _imageSaverService = PopularModuleFilter.inject(() {
       return ImageSaverServiceImpl(Injector.dio);
+    });
+    _localPopularUseCase = PopularModuleFilter.inject(() {
+      return LocalPopularUseCase(popularRepository: _repository);
     });
 
     _initialized = true;
@@ -81,13 +97,27 @@ class PopularPeopleModule {
     return _fetchPopularDetailsUseCase;
   }
 
+  static DataSourceLocalImpl get dataSourceLocalImpl {
+    _ensureInitialized();
+    return _dataSourceLocalImpl;
+  }
+
   static ImageSaverServiceImpl get imageSaverService {
     _ensureInitialized();
     return _imageSaverService;
   }
 
+  static LocalPopularUseCase get localPopularUseCase {
+    _ensureInitialized();
+    return _localPopularUseCase;
+  }
+
   static PopularPeopleBloc createPopularPeopleBloc() {
-    return PopularPeopleBloc(fetchPopularUseCase);
+    return PopularPeopleBloc(
+      fetchPopularUseCase,
+      localPopularUseCase,
+      Injector.connectionService,
+    );
   }
 
   static PopularPeopleDetailsBloc createPopularPeopleDetailsBloc() {

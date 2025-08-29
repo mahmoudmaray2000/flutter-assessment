@@ -25,7 +25,7 @@ class PopularPeopleListItem extends StatelessWidget {
               : CircleAvatar(),
         ),
         title: Text(person.name!),
-        subtitle: Text(person.knownForDepartment!),
+        subtitle: Text(person.knownForDepartment??""),
       ),
     );
   }

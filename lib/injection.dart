@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_assessment/core/connection/check_connection.dart';
 import 'package:flutter_assessment/core/networking/network_service.dart';
 
 import 'core/storage/sembast_service.dart';
@@ -8,6 +9,7 @@ class Injector {
   static late Dio _dio;
   static late NetworkHandler _networkHandler;
   static late SembastService _dbService;
+  static late ConnectionService _connectionService;
 
   Injector._();
 
@@ -17,6 +19,7 @@ class Injector {
   }
   static Future<void> init() async {
     _dio = Dio();
+    _connectionService = ConnectionService();
     _networkHandler = NetworkHandler(_dio);
     _dbService = SembastService();
     await _dbService.init();
@@ -24,4 +27,5 @@ class Injector {
   static Dio get dio => _dio;
   static NetworkHandler get networkHandler => _networkHandler;
   static SembastService get dbService => _dbService;
+  static ConnectionService get connectionService => _connectionService;
 }

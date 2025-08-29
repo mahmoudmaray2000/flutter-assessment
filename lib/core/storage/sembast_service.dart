@@ -32,6 +32,8 @@ class SembastService {
   Future<List<Map<String, dynamic>>> getPeoplePage(int page) async {
     final rec = await _store.record('page_$page').get(_db) as Map?;
     if (rec == null) return [];
+    print("Cache hit for page $page");
+    print("Cache timestamp: ${rec['ts']}");
     return List<Map<String, dynamic>>.from(rec['items'] as List);
   }
 

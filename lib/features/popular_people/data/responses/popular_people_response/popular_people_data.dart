@@ -8,7 +8,6 @@ class PopularPeopleData {
   String? posterPath;
   String? mediaType;
   String? originalLanguage;
-  List<int>? genreIds;
   double? popularity;
   String? releaseDate;
   bool? video;
@@ -28,7 +27,6 @@ class PopularPeopleData {
     this.posterPath,
     this.mediaType,
     this.originalLanguage,
-    this.genreIds,
     this.popularity,
     this.releaseDate,
     this.video,
@@ -49,7 +47,6 @@ class PopularPeopleData {
     posterPath = json['poster_path'];
     mediaType = json['media_type'];
     originalLanguage = json['original_language'];
-    genreIds = json['genre_ids'].cast<int>();
     popularity = json['popularity'];
     releaseDate = json['release_date'];
     video = json['video'];
@@ -71,7 +68,6 @@ class PopularPeopleData {
     data['poster_path'] = this.posterPath;
     data['media_type'] = this.mediaType;
     data['original_language'] = this.originalLanguage;
-    data['genre_ids'] = this.genreIds;
     data['popularity'] = this.popularity;
     data['release_date'] = this.releaseDate;
     data['video'] = this.video;

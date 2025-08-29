@@ -14,79 +14,74 @@ class PopularPeoplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PopularPeopleModule.createPopularPeopleBloc(),
-      child: Builder(
-        builder: (context) {
-          context.read<PopularPeopleBloc>().add(
-            FetchPopularPeopleEvent(page: 1),
-          );
-          return Scaffold(
-            appBar: AppBar(title: const Text('Popular People')),
-            body: BlocBuilder<PopularPeopleBloc, PopularPeopleState>(
-              builder: (context, state) {
-                if (state is PopularPeopleLoadingState && state.page == 1) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is PopularPeopleLoadedState) {
-                  return NotificationListener<ScrollNotification>(
-                    onNotification: (notification) {
-                      if (notification is ScrollEndNotification &&
-                          notification.metrics.pixels >=
-                              notification.metrics.maxScrollExtent - 100) {
-                        if (state.hasMore && !state.isLoadingMore) {
-                          context.read<PopularPeopleBloc>().add(
-                            LoadMorePopularPeopleEvent(),
-                          );
-                        }
-                      }
-                      return false;
-                    },
-                    child: ListView.builder(
-                      cacheExtent: 250,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      itemCount:
-                          state.popularPeople.length +
-                          (state.isLoadingMore ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index < state.popularPeople.length) {
-                          final person = state.popularPeople[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      PopularPeopleDetailsPage(
-                                        personId: person.id!,
-                                        images: person.knownFor!,
-                                      ),
-                                ),
-                              );
-                            },
-                            child: PopularPeopleListItem(
-                              person: person,
-                              key: ValueKey(person.id),
+      create: (context) =>
+          PopularPeopleModule.createPopularPeopleBloc()
+            ..add(FetchPopularAllPeopleEvent(page: 1)),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Popular People')),
+        body: BlocBuilder<PopularPeopleBloc, PopularPeopleState>(
+          builder: (context, state) {
+            print("statattatat $state");
+            if (state is PopularPeopleLoadingState && state.page == 1) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is PopularPeopleLoadedState) {
+              return NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification is ScrollEndNotification &&
+                      notification.metrics.pixels >=
+                          notification.metrics.maxScrollExtent - 100) {
+                    if (state.hasMore && !state.isLoadingMore) {
+                      context.read<PopularPeopleBloc>().add(
+                        LoadMorePopularPeopleEvent(),
+                      );
+                    }
+                  }
+                  return false;
+                },
+                child: ListView.builder(
+                  cacheExtent: 250,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  itemCount:
+                      state.popularPeople.length +
+                      (state.isLoadingMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index < state.popularPeople.length) {
+                      final person = state.popularPeople[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PopularPeopleDetailsPage(
+                                personId: person.id!,
+                                images: person.knownFor!,
+                              ),
                             ),
                           );
-                        } else {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  );
-                } else if (state is PopularPeopleErrorState) {
-                  return Center(child: Text(state.errorMessage));
-                } else {
-                  return const Center(child: Text('No data available'));
-                }
-              },
-            ),
-          );
-        },
+                        },
+                        child: PopularPeopleListItem(
+                          person: person,
+                          key: ValueKey(person.id),
+                        ),
+                      );
+                    } else {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              );
+            } else if (state is PopularPeopleErrorState) {
+              return Center(child: Text(state.errorMessage));
+            } else {
+              return const Center(child: Text('No data available'));
+            }
+          },
+        ),
       ),
     );
   }
