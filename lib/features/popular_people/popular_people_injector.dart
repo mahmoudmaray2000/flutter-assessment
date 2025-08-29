@@ -1,3 +1,4 @@
+import 'package:flutter_assessment/core/storage/image_service/image_service_impl.dart';
 import 'package:flutter_assessment/features/popular_people/data/data_source/data_source_impl.dart';
 import 'package:flutter_assessment/features/popular_people/data/repository/popular_repository_impl.dart';
 import 'package:flutter_assessment/features/popular_people/domain/use_case/fetch_popular_details_use_cae.dart';
@@ -12,6 +13,7 @@ class PopularModuleFilter {
     PopularRepositoryImpl,
     FetchPopularUseCase,
     FetchPopularDetailsUseCase,
+    ImageSaverServiceImpl,
   };
 
   static bool canInject<T>() => _allowedTypes.contains(T);
@@ -29,6 +31,7 @@ class PopularPeopleModule {
   static late final PopularRepositoryImpl _repository;
   static late final FetchPopularUseCase _fetchPopularUseCase;
   static late final FetchPopularDetailsUseCase _fetchPopularDetailsUseCase;
+  static late final ImageSaverServiceImpl _imageSaverService;
 
   static bool _initialized = false;
 
@@ -49,6 +52,10 @@ class PopularPeopleModule {
 
     _fetchPopularDetailsUseCase = PopularModuleFilter.inject(() {
       return FetchPopularDetailsUseCase(popularRepository: _repository);
+    });
+
+    _imageSaverService = PopularModuleFilter.inject(() {
+      return ImageSaverServiceImpl(Injector.dio);
     });
 
     _initialized = true;
@@ -74,16 +81,26 @@ class PopularPeopleModule {
     return _fetchPopularDetailsUseCase;
   }
 
+  static ImageSaverServiceImpl get imageSaverService {
+    _ensureInitialized();
+    return _imageSaverService;
+  }
+
   static PopularPeopleBloc createPopularPeopleBloc() {
     return PopularPeopleBloc(fetchPopularUseCase);
   }
 
   static PopularPeopleDetailsBloc createPopularPeopleDetailsBloc() {
-    return PopularPeopleDetailsBloc(fetchPopularDetailsUseCase);
+    return PopularPeopleDetailsBloc(
+      fetchPopularDetailsUseCase,
+      imageSaverService,
+    );
   }
 
   static void _ensureInitialized() {
-    assert(_initialized, 'PopularPeopleModule.init() must be called before accessing dependencies.');
+    assert(
+      _initialized,
+      'PopularPeopleModule.init() must be called before accessing dependencies.',
+    );
   }
 }
-

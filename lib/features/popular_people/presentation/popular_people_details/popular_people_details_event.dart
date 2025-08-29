@@ -13,3 +13,11 @@ class FetchPopularPeopleDetailsEvent extends PopularPeopleDetailsEvent {
   @override
   List<Object?> get props => [personId];
 }
+
+
+class DownloadImageEvent extends PopularPeopleDetailsEvent {
+  final String imageUrl;
+  DownloadImageEvent({required this.imageUrl});
+  @override
+  List<Object?> get props => [imageUrl];
+}

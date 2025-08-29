@@ -23,103 +23,121 @@ class PopularPeopleDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-      PopularPeopleModule.createPopularPeopleDetailsBloc(),
-      child: Builder(
-        builder: (context) {
-          context.read<PopularPeopleDetailsBloc>().add(
-            FetchPopularPeopleDetailsEvent(personId: personId),
-          );
-          return Scaffold(
-            appBar: AppBar(title: const Text('Person Details')),
-            body: BlocBuilder<PopularPeopleDetailsBloc, PopularPeopleDetailsState>(
-              builder: (context, state) {
-                if (state is PopularPeopleDetailsLoadingState) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is PopularPeopleDetailsLoadedState) {
-                  final details = state.details;
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        if (details.profilePath != null)
-                          CachedNetworkImage(
-                            imageUrl:
+          PopularPeopleModule.createPopularPeopleDetailsBloc()
+            ..add(FetchPopularPeopleDetailsEvent(personId: personId)),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Person Details')),
+        body: BlocConsumer<PopularPeopleDetailsBloc, PopularPeopleDetailsState>(
+          listener: (context, state) {
+            if (state is ImageDownloadSuccessState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Image saved Successfully')),
+              );
+            } else if (state is ImageDownloadErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Failed to download image: ${state.errorMessage}',
+                  ),
+                ),
+              );
+            }
+          },
+          buildWhen: (previous, current) =>
+              current is! ImageDownloadSuccessState &&
+              current is! ImageDownloadErrorState,
+          builder: (context, state) {
+            if (state is PopularPeopleDetailsLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is PopularPeopleDetailsLoadedState) {
+              final details = state.details;
+              final bloc = context.read<PopularPeopleDetailsBloc>();
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    if (details.profilePath != null)
+                      CachedNetworkImage(
+                        imageUrl:
                             "https://image.tmdb.org/t/p/w500${details.profilePath}",
-                            width: double.infinity,
-                            height: 300,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) =>
+                        width: double.infinity,
+                        height: 300,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
                             const Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) =>
+                        errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
-                          )
-                        else
-                          const Center(child: Text('No image available')),
-                        const SizedBox(height: 16),
-                        Text(
-                          details.name!,
-                          style: Theme.of(context).textTheme.headlineLarge,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(details.biography ?? 'No biography available'),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Images',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const SizedBox(height: 8),
-                        images.isNotEmpty
-                            ? GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                          ),
-                          itemCount: images.length,
-                          itemBuilder: (context, index) {
-                            final imageUrl =
-                                "https://image.tmdb.org/t/p/w500${images[index].backdropPath}";
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        FullScreenImagePage(imageUrl: imageUrl),
-                                  ),
-                                );
-                              },
-                              child: Hero(
-                                tag: imageUrl,
-                                child: CachedNetworkImage(
-                                  imageUrl: imageUrl,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                  const Center(child: CircularProgressIndicator()),
-                                  errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                            : const Center(child: Text('No images available')),
-                      ],
+                      )
+                    else
+                      const Center(child: Text('No image available')),
+                    const SizedBox(height: 16),
+                    Text(
+                      details.name ?? 'Unknown',
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
-                  );
-                } else if (state is PopularPeopleDetailsErrorState) {
-                  return Center(child: Text(state.errorMessage));
-                } else {
-                  return const Center(child: Text('No details available'));
-                }
-              },
-            ),
-          );
-        }
+                    const SizedBox(height: 8),
+                    Text(details.biography ?? 'No biography available'),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Images',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 8),
+                    images.isNotEmpty
+                        ? GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
+                            itemCount: images.length,
+                            itemBuilder: (context, index) {
+                              final imageUrl =
+                                  "https://image.tmdb.org/t/p/w500${images[index].backdropPath}";
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BlocProvider.value(
+                                        value: bloc,
+                                        child: FullScreenImagePage(
+                                          imageUrl: imageUrl,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Hero(
+                                  tag: imageUrl,
+                                  child: CachedNetworkImage(
+                                    imageUrl: imageUrl,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(child: Text('No images available')),
+                  ],
+                ),
+              );
+            } else if (state is PopularPeopleDetailsErrorState) {
+              return Center(child: Text(state.errorMessage));
+            } else {
+              return const Center(child: Text('No details available'));
+            }
+          },
+        ),
       ),
     );
   }

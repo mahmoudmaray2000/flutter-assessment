@@ -26,3 +26,16 @@ class PopularPeopleDetailsErrorState extends PopularPeopleDetailsState {
   @override
   List<Object?> get props => [errorMessage];
 }
+
+
+class ImageDownloadSuccessState extends PopularPeopleDetailsState {
+  final String filePath;
+
+  ImageDownloadSuccessState({required this.filePath});
+}
+
+class ImageDownloadErrorState extends PopularPeopleDetailsState {
+  final String errorMessage;
+
+  ImageDownloadErrorState({required this.errorMessage});
+}
