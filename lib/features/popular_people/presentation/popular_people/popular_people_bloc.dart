@@ -28,7 +28,7 @@ class PopularPeopleBloc extends Bloc<PopularPeopleEvent, PopularPeopleState> {
     Emitter<PopularPeopleState> emit,
   ) async {
     final isConnected = await _connectionService.isConnected;
-    if (isConnected==false) {
+    if (isConnected) {
       add(FetchPopularPeopleEvent(page: event.page));
     } else {
       add(LoadCachedPopularPeopleEvent(page: event.page));
