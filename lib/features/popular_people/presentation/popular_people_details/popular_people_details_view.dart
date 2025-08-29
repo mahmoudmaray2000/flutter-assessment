@@ -31,7 +31,7 @@ class PopularPeopleDetailsPage extends StatelessWidget {
           listener: _handleStateListener,
           buildWhen: (previous, current) =>
           current is! ImageDownloadSuccessState &&
-              current is! ImageDownloadErrorState,
+              current is! ImageDownloadErrorState && current is! ImageDownloadInProgressState,
           builder: (context, state) {
             if (state is PopularPeopleDetailsLoadingState) {
               return const Center(child: CircularProgressIndicator());

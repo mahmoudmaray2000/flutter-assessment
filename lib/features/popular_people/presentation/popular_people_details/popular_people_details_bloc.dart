@@ -35,6 +35,7 @@ class PopularPeopleDetailsBloc
     DownloadImageEvent event,
     Emitter<PopularPeopleDetailsState> emit,
   ) async {
+    emit(ImageDownloadInProgressState());
     final result = await _imageSaverService.saveFromUrl(
       event.imageUrl,
       name: event.imageUrl.split('/').last,

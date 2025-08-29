@@ -28,6 +28,8 @@ class PopularPeopleDetailsErrorState extends PopularPeopleDetailsState {
   List<Object?> get props => [errorMessage];
 }
 
+class ImageDownloadInProgressState extends PopularPeopleDetailsState {}
+
 class ImageDownloadSuccessState extends PopularPeopleDetailsState {
   final String filePath;
 
